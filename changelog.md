@@ -1,3 +1,7 @@
+__v0.0.22__
+
+update to stackage LTS 23 (ghc-9.8.4); purs package-set update
+
 __v0.0.21__
 switch to esm javascript module imports
 

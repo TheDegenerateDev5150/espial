@@ -12,6 +12,7 @@ import qualified Data.Aeson as A
 import System.Entropy (getEntropy)
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Base64.Types as Base64
 import qualified Data.ByteString.Base64.URL as Base64Url
 import qualified Crypto.Hash.SHA256 as SHA256
 
@@ -71,7 +72,7 @@ newtype HashedApiKey
 generateApiKey :: IO ApiKey
 generateApiKey = do
   bytes <- getEntropy 32
-  pure $ ApiKey $ Base64Url.encodeBase64 bytes
+  pure $ ApiKey $ Base64.extractBase64 $ Base64Url.encodeBase64 bytes
 
 hashApiKey :: ApiKey -> HashedApiKey
-hashApiKey = HashedApiKey . TE.decodeUtf8 . Base64Url.encodeBase64' . SHA256.hash . TE.encodeUtf8 . unApiKey
+hashApiKey = HashedApiKey . TE.decodeUtf8 . Base64.extractBase64 . Base64Url.encodeBase64' . SHA256.hash . TE.encodeUtf8 . unApiKey

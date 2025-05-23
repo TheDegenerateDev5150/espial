@@ -22,7 +22,7 @@ import Model as Import
 import ModelCustom as Import
 import Types as Import
 import Pretty as Import
-import Data.Functor as Import
+import Data.Functor as Import hiding (unzip)
 import Generic as Import
 import Database.Persist.Sql as Import (fromSqlKey, toSqlKey)
 

@@ -1,17 +1,16 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           espial
-version:        0.0.21
+version:        0.0.22
 synopsis:       Espial is an open-source, web-based bookmarking server.
-description:    .
-                Espial is an open-source, web-based bookmarking server.
+description:     Espial is an open-source, web-based bookmarking server.
                 - Yesod + PureScript + sqlite3
                 - multi-user (w/ privacy scopes)
-                - tags, stars, editing, deleting 
+                - tags, stars, editing, deleting
 category:       Web
 homepage:       https://github.com/jonschoning/espial
 bug-reports:    https://github.com/jonschoning/espial/issues
@@ -160,10 +159,10 @@ library
       aeson >=1.4
     , attoparsec
     , base >=4.18.1.0 && <5
-    , base64 <1
+    , base64 ==1.*
     , bcrypt >=0.0.8
     , blaze-html >=0.9 && <1.0
-    , bytestring >=0.11.5 && <0.12
+    , bytestring >=0.11.5 && <0.13
     , case-insensitive
     , classy-prelude >=1.4 && <1.6
     , classy-prelude-conduit >=1.4 && <1.6
@@ -175,7 +174,7 @@ library
     , data-default
     , directory >=1.1 && <1.4
     , entropy
-    , esqueleto >=3.5.11.1 && <3.5.14
+    , esqueleto >=3.5.11.1 && <3.5.15
     , fast-logger >=2.2 && <4
     , file-embed
     , foreign-store
@@ -207,7 +206,7 @@ library
     , wai
     , wai-extra >=3.0 && <3.2
     , wai-logger
-    , warp >=3.0 && <3.4
+    , warp >=3.0 && <3.5
     , yaml >=0.8 && <0.12
     , yesod >=1.6 && <1.8
     , yesod-auth >=1.6 && <1.8
@@ -275,10 +274,10 @@ executable espial
       aeson >=1.4
     , attoparsec
     , base >=4.18.1.0 && <5
-    , base64 <1
+    , base64 ==1.*
     , bcrypt >=0.0.8
     , blaze-html >=0.9 && <1.0
-    , bytestring >=0.11.5 && <0.12
+    , bytestring >=0.11.5 && <0.13
     , case-insensitive
     , classy-prelude >=1.4 && <1.6
     , classy-prelude-conduit >=1.4 && <1.6
@@ -291,7 +290,7 @@ executable espial
     , directory >=1.1 && <1.4
     , entropy
     , espial
-    , esqueleto >=3.5.11.1 && <3.5.14
+    , esqueleto >=3.5.11.1 && <3.5.15
     , fast-logger >=2.2 && <4
     , file-embed
     , foreign-store
@@ -323,7 +322,7 @@ executable espial
     , wai
     , wai-extra >=3.0 && <3.2
     , wai-logger
-    , warp >=3.0 && <3.4
+    , warp >=3.0 && <3.5
     , yaml >=0.8 && <0.12
     , yesod >=1.6 && <1.8
     , yesod-auth >=1.6 && <1.8
@@ -387,10 +386,10 @@ executable migration
       aeson >=1.4
     , attoparsec
     , base >=4.18.1.0 && <5
-    , base64 <1
+    , base64 ==1.*
     , bcrypt >=0.0.8
     , blaze-html >=0.9 && <1.0
-    , bytestring >=0.11.5 && <0.12
+    , bytestring >=0.11.5 && <0.13
     , case-insensitive
     , classy-prelude >=1.4 && <1.6
     , classy-prelude-conduit >=1.4 && <1.6
@@ -403,7 +402,7 @@ executable migration
     , directory >=1.1 && <1.4
     , entropy
     , espial
-    , esqueleto >=3.5.11.1 && <3.5.14
+    , esqueleto >=3.5.11.1 && <3.5.15
     , fast-logger >=2.2 && <4
     , file-embed
     , foreign-store
@@ -437,7 +436,7 @@ executable migration
     , wai
     , wai-extra >=3.0 && <3.2
     , wai-logger
-    , warp >=3.0 && <3.4
+    , warp >=3.0 && <3.5
     , yaml >=0.8 && <0.12
     , yesod >=1.6 && <1.8
     , yesod-auth >=1.6 && <1.8
@@ -505,10 +504,10 @@ test-suite test
       aeson >=1.4
     , attoparsec
     , base >=4.18.1.0 && <5
-    , base64 <1
+    , base64 ==1.*
     , bcrypt >=0.0.8
     , blaze-html >=0.9 && <1.0
-    , bytestring >=0.11.5 && <0.12
+    , bytestring >=0.11.5 && <0.13
     , case-insensitive
     , classy-prelude >=1.4 && <1.6
     , classy-prelude-conduit >=1.4 && <1.6
@@ -521,7 +520,7 @@ test-suite test
     , directory >=1.1 && <1.4
     , entropy
     , espial
-    , esqueleto >=3.5.11.1 && <3.5.14
+    , esqueleto >=3.5.11.1 && <3.5.15
     , fast-logger >=2.2 && <4
     , file-embed
     , foreign-store
@@ -554,7 +553,7 @@ test-suite test
     , wai
     , wai-extra >=3.0 && <3.2
     , wai-logger
-    , warp >=3.0 && <3.4
+    , warp >=3.0 && <3.5
     , yaml >=0.8 && <0.12
     , yesod >=1.6 && <1.8
     , yesod-auth >=1.6 && <1.8
