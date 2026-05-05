@@ -16,7 +16,7 @@ copyright: Copyright (c) 2018 Jon Schoning
 license: AGPL-3
 license-file: LICENSE
 homepage: https://github.com/jonschoning/espial
-git: git://github.com/jonschoning/espial.git
+git: https://github.com/jonschoning/espial.git
 bug-reports: https://github.com/jonschoning/espial/issues
 extra-source-files:
 - README.md
