@@ -2,9 +2,11 @@ import React from 'react';
 
 import { destroy, editBookmark, lookupTitle, markRead, toggleStar } from '../api';
 import { app, setFocus, toLocaleDateString } from '../globals';
+import { useTagSuggestions } from '../hooks/useTagSuggestions';
 import type { Bookmark } from '../types';
-import { encodeTag, fromNullableStr } from '../util';
+import { encodeTag, fromNullableStr, normalizeTags } from '../util';
 import { Markdown } from './Markdown';
+import { TagSuggestionsDropdown } from './TagSuggestionsDropdown';
 
 export function BMark({
   initial,
@@ -30,6 +32,24 @@ export function BMark({
 
   const shdate = toLocaleDateString(bm.time);
   const shdatetime = `${bm.time.slice(0, 16)}Z`;
+  const suggestEnabled = a.dat.suggestTags === true;
+
+  const {
+    tagInputRef,
+    suggestionState,
+    closeSuggestions,
+    onTagsChange,
+    onTagsKeyDown,
+    onTagsSelect,
+    onSuggestionHover,
+    onSuggestionPick,
+  } = useTagSuggestions({
+    enabled: suggestEnabled,
+    tags: editBm.tags,
+    onTagsUpdate: (tags) => {
+      setEditBm((x) => ({ ...x, tags }));
+    },
+  });
 
   async function onStar(next: boolean) {
     await toggleStar(bm.bid, next ? 'star' : 'unstar');
@@ -55,6 +75,7 @@ export function BMark({
     setEditBm(bm);
     setEdit(next);
     setApiError(null);
+    closeSuggestions();
     if (next) setFocus(tagInputId);
   }
 
@@ -71,7 +92,7 @@ export function BMark({
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>): Promise<void> => {
     e.preventDefault();
     setApiError(null);
-    const editBm2 = { ...editBm, tags: editBm.tags.replace(/,/g, ' ') };
+    const editBm2 = { ...editBm, tags: normalizeTags(editBm.tags) };
 
     const res = await editBookmark(editBm2);
     if (res.ok && res.status >= 200 && res.status < 300) {
@@ -240,18 +261,34 @@ export function BMark({
             />
             <div id="tags_input_box">
               <div>tags</div>
-              <input
-                id={tagInputId}
-                type="text"
-                className="tags w-100 mb1 pt1 edit_form_input"
-                name="tags"
-                autoComplete="off"
-                autoCapitalize="off"
-                value={editBm.tags}
-                onChange={(e) => {
-                  setEditBm((x) => ({ ...x, tags: e.target.value }));
-                }}
-              />
+              <div className="relative">
+                <input
+                  id={tagInputId}
+                  ref={tagInputRef}
+                  type="text"
+                  className="tags w-100 mb1 pt1 edit_form_input"
+                  name="tags"
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  value={editBm.tags}
+                  onChange={onTagsChange}
+                  onKeyDown={onTagsKeyDown}
+                  onClick={onTagsSelect}
+                  onSelect={onTagsSelect}
+                  onBlur={() => {
+                    window.setTimeout(() => {
+                      closeSuggestions();
+                    }, 0);
+                  }}
+                />
+                {suggestionState != null ? (
+                  <TagSuggestionsDropdown
+                    suggestionState={suggestionState}
+                    onHover={onSuggestionHover}
+                    onPick={onSuggestionPick}
+                  />
+                ) : null}
+              </div>
             </div>
             <div className="edit_form_checkboxes mv3">
               <input

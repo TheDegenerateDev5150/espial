@@ -33,6 +33,7 @@ export type Note = {
 export type AccountSettings = {
   archiveDefault: boolean;
   privateDefault: boolean;
+  suggestTags: boolean;
   privacyLock: boolean;
 };
 
@@ -43,6 +44,20 @@ export type TagCloudMode = {
 };
 
 export type TagCloud = Record<string, number>;
+
+export type TSuggestion = {
+  term: string;
+  count: number;
+};
+
+export type TagSuggestionRequest = {
+  query: string;
+  currentTags: string[];
+};
+
+export type TagSuggestionResponse = {
+  suggestions: TSuggestion[];
+};
 
 export type TagCloudModeF =
   | { kind: 'top'; expanded: boolean; value: number }

@@ -1,7 +1,15 @@
 import ky from 'ky';
 
 import { app } from './globals';
-import type { AccountSettings, Bookmark, Note, TagCloud, TagCloudMode } from './types';
+import type {
+  AccountSettings,
+  Bookmark,
+  Note,
+  TagCloud,
+  TagCloudMode,
+  TagSuggestionRequest,
+  TagSuggestionResponse,
+} from './types';
 
 export type StarAction = 'star' | 'unstar';
 
@@ -106,6 +114,21 @@ export async function updateTagCloudMode(mode: TagCloudMode): Promise<void> {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(mode),
   });
+}
+
+export async function fetchTagSuggestions(
+  data: TagSuggestionRequest,
+): Promise<TagSuggestionResponse | null> {
+  const res = await request('POST', 'api/tagSuggestions', {
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) return null;
+  try {
+    return await res.json<TagSuggestionResponse>();
+  } catch {
+    return null;
+  }
 }
 
 export async function destroyNote(nid: number): Promise<void> {

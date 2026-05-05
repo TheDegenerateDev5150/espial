@@ -1,33 +1,38 @@
 module Handler.Add where
 
-import Import
-import Handler.Archive
 import Data.List (nub)
 import qualified Data.Text as T (replace)
+import Handler.Archive
+import Import
 
 -- View
 
 getAddViewR :: Handler Html
 getAddViewR = do
-  userId <- requireAuthId
+  Entity userId user <- requireAuth
+  frontendBundleName <- appFrontendBundleName <$> getYesod
 
   murl <- lookupGetParam "url"
   mBookmarkDb <- runDB (fetchBookmarkByUrl userId murl)
-  let mformdb = fmap _toBookmarkForm mBookmarkDb 
+  let mformdb = fmap _toBookmarkForm mBookmarkDb
   formurl <- bookmarkFormUrl
 
   let renderEl = "addForm" :: Text
 
   popupLayout do
-    toWidget [whamlet|
+    toWidget
+      [whamlet|
       <div id="#{ renderEl }">
     |]
-    toWidgetBody [julius|
+    toWidgetBody
+      [julius|
       app.dat.bmark = #{ toJSON (fromMaybe formurl mformdb) }; 
+      app.dat.suggestTags = #{ userSuggestTags user };
     |]
-    toWidget [hamlet|
+    toWidget
+      [hamlet|
       <script type="module">
-        import { renderAddForm } from '@{StaticR js_app_min_js}'
+        import { renderAddForm } from '@{StaticR (StaticRoute ["js", frontendBundleName] [])}'
         renderAddForm('##{renderEl}')(app.dat.bmark)();
     |]
 
@@ -40,20 +45,20 @@ bookmarkFormUrl = do
   tags <- lookupGetParam "tags"
   private <- lookupGetParam "private" <&> fmap parseChk <&> (<|> Just (userPrivateDefault user))
   toread <- lookupGetParam "toread" <&> fmap parseChk
-  pure $
-    BookmarkForm
-    { _url = url
-    , _title = title
-    , _description = description
-    , _tags = tags
-    , _private = private
-    , _toread = toread
-    , _bid = Nothing
-    , _slug = Nothing
-    , _selected = Nothing
-    , _time = Nothing
-    , _archiveUrl = Nothing
-    }
+  pure
+    $ BookmarkForm
+      { _url = url,
+        _title = title,
+        _description = description,
+        _tags = tags,
+        _private = private,
+        _toread = toread,
+        _bid = Nothing,
+        _slug = Nothing,
+        _selected = Nothing,
+        _time = Nothing,
+        _archiveUrl = Nothing
+      }
   where
     parseChk s = s == "yes" || s == "on" || s == "true" || s == "1"
 
@@ -79,8 +84,9 @@ _handleFormSuccess bookmarkForm = do
       bm <- liftIO $ _toBookmark userId bookmarkForm
       res <- runDB (upsertBookmark userId mkbid bm tags)
       forM_ (maybeUpsertResult res) $ \kbid ->
-        whenM (shouldArchiveBookmark user kbid) $
-        void $ async (archiveBookmarkUrl kbid (unpack (bookmarkHref bm)))
+        whenM (shouldArchiveBookmark user kbid)
+          $ void
+          $ async (archiveBookmarkUrl kbid (unpack (bookmarkHref bm)))
       pure res
 
 postLookupTitleR :: Handler ()
@@ -90,3 +96,11 @@ postLookupTitleR = do
   fetchPageTitle (unpack (_url bookmarkForm)) >>= \case
     Left _ -> sendResponseStatus noContent204 ()
     Right title -> sendResponseStatus ok200 title
+
+postTagSuggestionsR :: Handler Text
+postTagSuggestionsR = do
+  userId <- requireAuthId
+  tagSuggestionRequest <- requireCheckJsonBody
+  let suggestion_limit = 10
+  tagSuggestions <- runDB $ getTagSuggestions userId tagSuggestionRequest suggestion_limit
+  sendStatusJSON ok200 tagSuggestions
