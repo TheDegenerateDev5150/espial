@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.29 (2026-05-07)
+
+- Extend migration to add commands: `importnetscapebookmarks`, `exportnetscapebookmarks` (fixes #30)
+- fix migration command `ImportBookmarks` (pinboard import file) parsing bug to handle when the description is a boolean (fixes #32)
+- tag suggestions: when a tag exactly matches an existing tag, it will appear first in the suggestion list
+
 ## v0.0.28 (2026-05-06)
 
 - add new app setting: `archive-backend: "_env:ARCHIVE_BACKEND:disabled"`
